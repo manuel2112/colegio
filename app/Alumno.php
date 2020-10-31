@@ -1,0 +1,10 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Alumno extends Model
+{
+    protected $fillable = ['ALUMNO_RUT','ALUMNO_NOMBRES','ALUMNO_AP_PATERNO','ALUMNO_AP_MATERNO','ALUMNO_EMAIL','ALUMNO_FEC_NAC','ALUMNO_DOMICILIO','CIUDAD_ID','ALUMNO_FONO_CEL','ALUMNO_FONO_FIJO','ALUMNO_SEXO','ALUMNO_IMG','ALUMNO_INGRESO','ALUMNO_PASSWORD','PREVISION_ID','SANGRE_ID'];
+}

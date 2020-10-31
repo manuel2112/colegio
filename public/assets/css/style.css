@@ -1,0 +1,13 @@
+.picker__select--month,
+.picker__select--year {
+    padding: 0 !important;
+}
+
+td.acciones {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    align-content: stretch;
+}
