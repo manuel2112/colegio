@@ -74,8 +74,51 @@
                         <td class="table-dark">IMAGEN</td>
                         <td><img src="{{ Storage::url($apoderado->APODERADO_IMG) }}" width="100" alt=""></td>
                     </tr>
+                    <tr>
+                        <td class="table-dark">APODERADO DE</td>
+                        <td>
+                        @foreach( $pupilos as $pupilo )
+                        <?php $var = alumno($pupilo->ID_ALUMNO)  ?>
+                        <div class="pupilo">
+                            <a href="{{ route('alumnos.show' , $pupilo->ID_ALUMNO) }}" class="btn btn-sm btn-outline-secondary">{{ $var->ALUMNO_NOMBRES }} {{ $var->ALUMNO_AP_PATERNO }} {{ $var->ALUMNO_AP_MATERNO }}</a>
+                            <form method="POST" action="{{ route('apoderado.destroypupilo', $apoderado) }}">
+                                @csrf
+                                @method('DELETE')
+                                <input type="hidden" name="id-pupilo" value="{{ $var->id }}" >
+                                <button type="submit" class="btn btn-sm btn-danger delete-confirm"><i class="far fa-trash-alt"></i></button>
+                            </form>
+                        </div>
+                        @endforeach
+                        </td>
+                    </tr>
                 </tbody>
-            </table>                     
+            </table>
+
+        <form method="POST" action="{{ route('apoderado.addalumno', $apoderado) }}" role="form">
+            @csrf
+            <div class="card text-center mb-5">
+                <div class="card-header" style="">
+                    BUSCAR ALUMNO
+                    {!! $errors->first('slc-alumno','<br><small class="text-danger">:message</small>') !!}
+                </div>
+                <div class="card-body">
+                    <div class="input-group selectWrapper col-12">
+                        <select class="form-control custom-select form-control-lg" name="slc-alumno" required>
+                            <option value="">SELECCIONAR ALUMNO...</option>
+                            @foreach( $alumnos as $alumno )
+                                <option value="{{ $alumno->id }}" {{ old('slc-alumno') == $alumno->id ? 'selected' : '' }}>{{ $alumno->id }} / {{ $alumno->ALUMNO_RUT }} / {{ $alumno->ALUMNO_AP_PATERNO }} {{ $alumno->ALUMNO_AP_MATERNO }}, {{ $alumno->ALUMNO_NOMBRES }}</option>
+                            @endforeach
+                        </select>
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-outline-primary" name="btn-color-01">SELECCIONAR</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    BUSCAR Y SELECCIONAR ALUMNO
+                </div>
+            </div>
+        </form>
                       
         </div>
     </div>

@@ -48,7 +48,8 @@
             "app/helper/prevision.php",
             "app/helper/tiposangre.php",
             "app/helper/tipoapoderado.php",
-            "app/helper/edad.php"
+            "app/helper/edad.php",
+            "app/helper/alumno.php"
         ]
     },
     "autoload-dev": {

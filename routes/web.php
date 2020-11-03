@@ -59,3 +59,5 @@ Route::get('/apoderado/{apoderado}/show','ApoderadoController@show')->name('apod
 Route::get('/apoderado/{apoderado}/editar','ApoderadoController@edit')->name('apoderado.edit');
 Route::patch('/apoderado/{apoderado}','ApoderadoController@update')->name('apoderado.update');
 Route::delete('/apoderado/{apoderado}','ApoderadoController@destroy')->name('apoderado.destroy');
+Route::post('/apoderado/{apoderado}','ApoderadoController@addpupilo')->name('apoderado.addalumno');
+Route::delete('/apoderado/{apoderado}','ApoderadoController@destroypupilo')->name('apoderado.destroypupilo');

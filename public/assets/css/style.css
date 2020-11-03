@@ -11,3 +11,13 @@ td.acciones {
     align-items: center;
     align-content: stretch;
 }
+
+.pupilo {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: stretch;
+}

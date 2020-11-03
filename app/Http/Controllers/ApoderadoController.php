@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Apoderado;
+use App\AlumnoApoderado;
 use Freshwork\ChileanBundle\Rut;
 use App\Rules\ExisteApoderadoRut;
+use App\Rules\ExistePupilo;
 use Illuminate\Support\Facades\DB;
 
 class ApoderadoController extends Controller
@@ -57,7 +59,7 @@ class ApoderadoController extends Controller
         $cel = request('insCelularApoderado') ? '+56' . request('insCelularApoderado') : NULL;
 
         Apoderado::create([
-            'APODERADO_RUT' => $rutValido,
+            'APODERADO_RUT'             => $rutValido,
             'APODERADO_NOMBRES'         => mb_strtoupper(request('insNombresApoderado')),
             'APODERADO_AP_PATERNO'      => mb_strtoupper(request('insApPaternoApoderado')),
             'APODERADO_AP_MATERNO'      => mb_strtoupper(request('insApMaternoApoderado')),
@@ -79,7 +81,9 @@ class ApoderadoController extends Controller
     
     public function show(Apoderado $apoderado)
     {
-        $data['apoderado'] = $apoderado;
+        $data['apoderado']  = $apoderado;
+        $data['alumnos']    = DB::table('alumnos')->where('ALUMNO_FLAG', true)->orderby('ALUMNO_AP_PATERNO', 'ASC')->get();
+        $data['pupilos']    = DB::table('alumno_apoderado')->where('ID_APODERADO', $apoderado->id )->orderby('ID_ALUMNO', 'ASC')->get();
         return view('apoderado.show',$data);
     }
     
@@ -142,5 +146,33 @@ class ApoderadoController extends Controller
         DB::table('apoderado')->where('id', $apoderado->id)->update(['APODERADO_FLAG' => false]);
 
         return redirect()->route('apoderado.index')->with('success','APODERADO ELIMINADO EXITOSAMENTE');
+    }
+
+    public function addpupilo(Apoderado $apoderado)
+    {
+        $data['apoderado']  = $apoderado;
+        
+        request()->validate([
+            'slc-alumno'     => ['required', 'string', new ExistePupilo($apoderado->id)]
+        ]);
+
+        AlumnoApoderado::create([
+            'ID_ALUMNO'         => request('slc-alumno'),
+            'ID_APODERADO'      => $apoderado->id
+        ]);
+        
+        return redirect()->route('apoderado.show',$data)->with('success','ALUMNO ASOCIADO EXITOSAMENTE');
+    }
+    
+    public function destroypupilo(Apoderado $apoderado)
+    {
+        $data['apoderado']  = $apoderado;
+
+        DB::table('alumno_apoderado')
+        ->where('ID_ALUMNO', request('id-pupilo'))
+        ->where('ID_APODERADO', $apoderado->id)
+        ->delete();
+
+        return redirect()->route('apoderado.show',$data)->with('success','ESTE ALUMNO HA SIDO ELIMINADO EXITOSAMENTE');
     }
 }

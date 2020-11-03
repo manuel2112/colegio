@@ -10,7 +10,6 @@
 
             <form method="POST" action="{{ route('apoderado.store') }}" role="form" enctype="multipart/form-data">
                 @csrf
-
                 <div class="row">
                     <div class="col-12 col-md-3">
                         <div class="form-group">
