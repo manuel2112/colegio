@@ -6,6 +6,7 @@ use App\Alumno;
 use Freshwork\ChileanBundle\Rut;
 use App\Rules\ExisteAlumnoRut;
 use Illuminate\Support\Facades\DB;
+use DataTables;
 
 class AlumnoController extends Controller
 {    
@@ -144,5 +145,31 @@ class AlumnoController extends Controller
               ->update(['ALUMNO_FLAG' => false]);
 
         return redirect()->route('alumnos.index')->with('success','ALUMNO ELIMINADO EXITOSAMENTE');
+    }
+
+    public function json()
+    {
+        $data = Alumno::where('ALUMNO_FLAG', true)->orderby('ALUMNO_AP_PATERNO', 'ASC')->get();
+        return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                       $btn = '<div class="btn-group">';
+                       $btn .= '<a href="'.route('alumnos.show' , $row).'" class="btn btn-sm btn-primary"><i class="fas fa-eye"></i></a>';
+                       $btn .= '<a href="'.route('alumnos.edit' , $row).'" class="btn btn-sm btn-warning"><i class="far fa-edit"></i></a>';
+                       $btn .= '<form method="POST" action="'.route('alumnos.destroy', $row).'">
+                       '.csrf_field().'
+                       <input type="hidden" name="_method" value="DELETE"> 
+                       <button type="submit" class="btn btn-sm btn-danger delete-confirm"><i class="far fa-trash-alt"></i></button></form>';
+                       $btn .= '</div>';
+                       return $btn;
+                })
+                ->addColumn('nombre', function($row){
+                       $nombre = $row->ALUMNO_AP_PATERNO.' '.$row->ALUMNO_AP_MATERNO.', '. $row->ALUMNO_NOMBRES;
+                       return $nombre;
+                })
+                ->rawColumns(['action','nombre'])
+                ->make(true);
+
+        return view('index');
     }
 }

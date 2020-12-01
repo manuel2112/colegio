@@ -5,24 +5,24 @@ namespace App\Rules;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 
-class ExisteCiudad implements Rule
+class ExisteAsignaturaNmb implements Rule
 {
     public function __construct(){}
     
     public function passes($attribute, $value)
     {
-        $ciudad = DB::table('ciudad')
+        $asignatura = DB::table('asignaturas')
                                     ->where([
-                                        ['CIUDAD_NOMBRE', $value],
-                                        ['CIUDAD_FLAG', TRUE],
+                                        ['ASIGNATURA_NOMBRE', $value],
+                                        ['ASIGNATURA_FLAG', TRUE]
                                     ])
                                     ->get();
-        $bool = count($ciudad) > 0 ? false : true;
+        $bool = count($asignatura) > 0 ? false : true;
         return $bool;
     }
 
     public function message()
     {
-        return 'Esta Ciudad ya existe.';
+        return 'Este nombre de asignatura ya existe.';
     }
 }

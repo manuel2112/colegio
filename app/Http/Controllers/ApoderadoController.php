@@ -8,9 +8,10 @@ use Freshwork\ChileanBundle\Rut;
 use App\Rules\ExisteApoderadoRut;
 use App\Rules\ExistePupilo;
 use Illuminate\Support\Facades\DB;
+use DataTables;
 
 class ApoderadoController extends Controller
-{    
+{
     public function index()
     {
         $data['apoderados'] = Apoderado::where('APODERADO_FLAG', true)->orderby('id', 'ASC')->get();
@@ -174,5 +175,31 @@ class ApoderadoController extends Controller
         ->delete();
 
         return redirect()->route('apoderado.show',$data)->with('success','ESTE ALUMNO HA SIDO ELIMINADO EXITOSAMENTE');
+    }
+
+    public function json()
+    {
+        $data = Apoderado::where('APODERADO_FLAG', true)->orderby('APODERADO_AP_PATERNO', 'ASC')->get();
+        return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                       $btn = '<div class="btn-group">';
+                       $btn .= '<a href="'.route('apoderado.show' , $row).'" class="btn btn-sm btn-primary"><i class="fas fa-eye"></i></a>';
+                       $btn .= '<a href="'.route('apoderado.edit' , $row).'" class="btn btn-sm btn-warning"><i class="far fa-edit"></i></a>';
+                       $btn .= '<form method="POST" action="'.route('apoderado.destroy', $row).'">
+                       '.csrf_field().'
+                       <input type="hidden" name="_method" value="DELETE"> 
+                       <button type="submit" class="btn btn-sm btn-danger delete-confirm"><i class="far fa-trash-alt"></i></button></form>';
+                       $btn .= '</div>';
+                       return $btn;
+                })
+                ->addColumn('nombre', function($row){
+                       $nombre = $row->APODERADO_AP_PATERNO.' '.$row->APODERADO_AP_MATERNO.', '. $row->APODERADO_NOMBRES;
+                       return $nombre;
+                })
+                ->rawColumns(['action','nombre'])
+                ->make(true);
+
+        return view('index');
     }
 }

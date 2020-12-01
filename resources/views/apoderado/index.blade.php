@@ -9,49 +9,67 @@
             <h1>Apoderados</h1>
             <a href="{{ route('apoderado.create') }}" class="btn btn-primary float-right">Nuevo Apoderado</a>
 
-            <table class="table">
-                <thead class="thead-dark">
+            <table class="table table-bordered table-dark table-hover" id="tblapoderado" style="width:100%">
+                <thead>
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">RUT</th>
                         <th scope="col">NOMBRE</th>
-                        <th scope="col">IMG</th>
                         <th scope="col">ACCIONES</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @forelse( $apoderados as $apoderado )
-                    <tr>
-                        <th scope="row">{{ $contador++ }}</th>
-                        <td>{{ $apoderado->APODERADO_RUT }}</td>
-                        <td>{{ $apoderado->APODERADO_AP_PATERNO }} {{ $apoderado->APODERADO_AP_MATERNO }}, {{ $apoderado->APODERADO_NOMBRES }}</td>
-                        <td>
-                            @if( $apoderado->APODERADO_IMG )
-                                <img src="{{ Storage::url($apoderado->APODERADO_IMG) }}" width="50" alt="">
-                            @else
-                                <i class="fas fa-user-tie"></i>
-                            @endif
-                        </td>
-                        <td class="acciones">
-                            <a href="{{ route('apoderado.show' , $apoderado) }}" class="btn btn-sm btn-primary"><i class="fas fa-eye"></i></a>
-                            <a href="{{ route('apoderado.edit' , $apoderado) }}" class="btn btn-sm btn-warning"><i class="far fa-edit"></i></a>
-                            <form method="POST" action="{{ route('apoderado.destroy', $apoderado) }}">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger delete-confirm"><i class="far fa-trash-alt"></i></button>
-                            </form>
-                        </td>
-                        
-                    </tr>
-                    @empty
-                    <tr>
-                        <th colspan='4'>TABLA SIN DATOS</th>
-                    </tr>
-                    @endforelse
-                </tbody>
             </table>
+            
         </div>
     </div>
 </div>
 
+@endsection
+
+@section('scripts')
+<script type="text/javascript">
+
+  $(function () {    
+
+    var table = $('#tblapoderado').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('apoderado.json') }}",
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+        },
+        lengthMenu : [
+                        [ 50, 100, -1 ],
+                        [ '50', '100', 'Todo' ] ],
+        columns: [
+            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+            {data: 'APODERADO_RUT', name: 'APODERADO_RUT'},
+            {data: 'nombre', name: 'nombre'},
+            {data: 'action', name: 'action', orderable: false, searchable: false}
+        ]
+    }); 
+
+    $('#tblapoderado').on( 'draw.dt', function () {
+        $('.delete-confirm').click(function(event) {
+            var form = $(this).closest("form");
+            event.preventDefault();
+            swal({
+                    title: 'ELIMINAR',
+                    text: '¿ESTÁS SEGURO DE ELIMINAR ESTE REGISTRO?',
+                    icon: "warning",
+                    buttons: ["CANCELAR", "ELIMINAR"],
+                    dangerMode: true,
+                    showLoaderOnConfirm: true
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        form.submit();
+                    }
+                });
+        });
+    });
+
+  });
+
+</script>
 @endsection

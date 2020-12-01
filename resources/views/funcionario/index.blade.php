@@ -1,15 +1,15 @@
 @extends('layout')
-@section('title','ALUMNO')
+@section('title','FUNCIONARIO')
 
 @section('content')
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
-            <h1>Alumnos</h1>
-            <a href="{{ route('alumnos.create') }}" class="btn btn-primary float-right">Nuevo Alumno</a>
+            <h1>Funcionarios</h1>
+            <a href="{{ route('funcionario.create') }}" class="btn btn-primary float-right">Nuevo Funcionario</a>
 
-            <table class="table table-bordered table-dark table-hover" id="tblalumno" style="width:100%">
+            <table class="table table-bordered table-dark table-hover" id="tblfuncionario" style="width:100%">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -19,7 +19,7 @@
                     </tr>
                 </thead>
             </table>
-            
+
         </div>
     </div>
 </div>
@@ -31,10 +31,10 @@
 
   $(function () {    
 
-    var table = $('#tblalumno').DataTable({
+    var table = $('#tblfuncionario').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('alumnos.json') }}",
+        ajax: "{{ route('funcionario.json') }}",
         language: {
             "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
         },
@@ -43,13 +43,13 @@
                         [ '50', '100', 'Todo' ] ],
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'ALUMNO_RUT', name: 'ALUMNO_RUT'},
+            {data: 'FUNCIONARIO_RUT', name: 'FUNCIONARIO_RUT'},
             {data: 'nombre', name: 'nombre'},
             {data: 'action', name: 'action', orderable: false, searchable: false}
         ]
     }); 
 
-    $('#tblalumno').on( 'draw.dt', function () {
+    $('#tblfuncionario').on( 'draw.dt', function () {
         $('.delete-confirm').click(function(event) {
             var form = $(this).closest("form");
             event.preventDefault();
