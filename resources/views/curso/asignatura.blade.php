@@ -25,7 +25,7 @@
                         <td>{{ nmbAsignaturaByID($asig->ASIGNATURA_ID)->ASIGNATURA_NOMBRE }}</td>
                         <td>
                             @if( $asig->FUNCIONARIO_ID )
-                                <?php $profesor = funcionario($asig->FUNCIONARIO_ID);  ?>
+                                <?php $profesor = funcionario($asig->FUNCIONARIO_ID); ?>
                                 {{ $profesor->FUNCIONARIO_AP_PATERNO }} {{ $profesor->FUNCIONARIO_AP_MATERNO }}, {{ $profesor->FUNCIONARIO_NOMBRES }}
                             @else
                                 <button type="button" class="btn btn-warning btn-sm btnCallProfesor" data-toggle='modal' data-target='#modalAddProfesor' nombreasignatura="{{ nmbAsignaturaByID($asig->ASIGNATURA_ID)->ASIGNATURA_NOMBRE }}" idasigcurso="{{ $asig->id }}">SELECCIONAR PROFESOR</button>
